@@ -1,18 +1,23 @@
 package com.lynxiayel.sensortimechecker;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -59,7 +64,6 @@ public class MainActivity extends Activity {
                 SensorService.SensorServiceBinder binder = (SensorService.SensorServiceBinder) service;
                 sensorService = binder.getService();
                 sensorService.setHandler(mHandler);
-                isSensorServiceBound = true;
             }
 
             @Override
@@ -121,39 +125,39 @@ public class MainActivity extends Activity {
         }
     }
 
-//    private void handlePermission() {
-//        // Here, thisActivity is the current activity
-//        if (ContextCompat.checkSelfPermission(this,
-//                Manifest.permission.BODY_SENSORS)
-//                != PackageManager.PERMISSION_GRANTED) {
-//
-//            // No explanation needed, we can request the permission.
-//            ActivityCompat.requestPermissions(this,
-//                    new String[]{Manifest.permission.BODY_SENSORS},
-//                    REQUEST_SENSOR_PERMISSION);
-//        }
-//    }
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           String permissions[], int[] grantResults) {
-//        switch (requestCode) {
-//            case REQUEST_SENSOR_PERMISSION: {
-//                // If request is cancelled, the result arrays are empty.
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    init(true);
-//                } else {
-//                    Toast.makeText(this, "Sorry we cannot look into the SensorEvent.timestamp if you don't grant the permission.", Toast.LENGTH_LONG).show();
-//                    init(false);
-//                }
-//            }
-//        }
-//    }
+    private void handlePermission() {
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.BODY_SENSORS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // No explanation needed, we can request the permission.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.BODY_SENSORS},
+                    REQUEST_SENSOR_PERMISSION);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_SENSOR_PERMISSION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    init(true);
+                } else {
+                    Toast.makeText(this, "Sorry we cannot look into the SensorEvent.timestamp if you don't grant the permission.", Toast.LENGTH_LONG).show();
+                    init(false);
+                }
+            }
+        }
+    }
 
     @Override
     protected void onPause() {
-        if (isSensorServiceBound && mCon!=null)
-            unbindService(mCon);
+        if (isSensorServiceBound && mCon != null)
+            myUnbindService();
         super.onPause();
     }
 
@@ -169,5 +173,12 @@ public class MainActivity extends Activity {
     private void myBindService() {
         Intent intent = new Intent(this, SensorService.class);
         bindService(intent, mCon, Context.BIND_AUTO_CREATE);
+        isSensorServiceBound = true;
+    }
+
+    private void myUnbindService() {
+        unbindService(mCon);
+        isSensorServiceBound = false;
+
     }
 }
