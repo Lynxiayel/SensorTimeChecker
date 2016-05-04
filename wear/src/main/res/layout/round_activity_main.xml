@@ -23,6 +23,7 @@ tools:deviceIds="wear_square">
 
     <TextView
         android:id="@+id/timestamp_meaning"
+        android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -37,6 +38,7 @@ tools:deviceIds="wear_square">
 
     <TextView
         android:id="@+id/timestamp_value"
+        android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

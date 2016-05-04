@@ -24,10 +24,13 @@
 
         <TextView
             android:id="@+id/timestamp_meaning"
+            android:textStyle="bold"
+            android:paddingTop="3dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textIsSelectable="true" />
         <TextView
+            android:paddingTop="6dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Your SensorEvent.timestamp is:"
@@ -35,6 +38,7 @@
 
         <TextView
             android:id="@+id/timestamp_value"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textIsSelectable="true" />
